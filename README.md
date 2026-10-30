@@ -1,139 +1,133 @@
-# Rudo kričí — rudo-tts-stt-web
+# rudo-tts-stt-web
 
-Jednoduché lokálne GUI nad produkčnými AI službami (RTX 3050 AI stack).
-Text → speech aj speech → text na jednej stránke, so zdieľanou frontou.
+Local web GUI for **TTS (Text-to-Speech)** and **STT (Speech-to-Text)** powered by **RTX 3050 AI GPU Manager**. Features Chatterbox TTS with voice cloning, WhisperX STT with diarization, and a voice selection UI.
 
-## Účel
+## Features
 
-* UI pre produkčné **TTS** (Chatterbox Slovak, hlasy **Rudo** / **Melisko**, predvolený Rudo) a **STT** (Parakeet TDT 0.6B v3)
-* **nikdy** nespúšťa vlastný model — všetky AI operácie idú výhradne cez
-  `AI GPU Manager` (`http://127.0.0.1:18080`), ktorý drží GPU arbitráž
-* server-side globálna FIFO fronta s `concurrency = 1`: nikdy
-  TTS+STT, 2×TTS ani 2×STT naraz (platí aj keď web otvoria dvaja naraz)
+- **Chatterbox TTS**: Voice cloning from reference audio, multi-speaker support
+- **WhisperX STT**: Transcription with word-level timestamps, speaker diarization
+- **Voice Selection UI**: Visual voice picker with Fico voice (seed 0, denoised)
+- **RTX 3050 Optimized**: Managed by AI GPU Manager for dynamic model loading/offloading
+- **REST API**: `/tts`, `/stt`, `/voices`, `/health` endpoints
+- **WebSocket**: Real-time STT streaming
 
-## Architektúra
+## Architecture
 
 ```
-Browser → rudo-tts-stt-web (:10075) → AI GPU Manager (:18080)
-                                        └─ jeden GPU profil naraz
-                                           (retrieval | STT | TTS)
+┌─────────────────────────────────────────────────────────────┐
+│  rudo-tts-stt-web (FastAPI/Uvicorn on :10075)              │
+│  ├── app.py              → Main FastAPI application         │
+│  ├── static/             → Web UI (HTML/CSS/JS)            │
+│  └── tests/              → Test suite                       │
+└─────────────────────────────────────────────────────────────┘
+         │
+         ▼
+   ┌───────────────────────┐
+   │ AI GPU Manager        │
+   │ (manager_app on       │
+   │  :18080)              │
+   │ ├── Chatterbox TTS    │
+   │ ├── WhisperX STT      │
+   │ └── Model offloading  │
+   └───────────────────────┘
 ```
 
-* `app.py` — FastAPI: routes, SQLite job store, asyncio fronta (Semaphore(1)),
-  FFmpeg konverzie (subprocess, argument list, `shell=False`), retention loop
-* `static/` — vanilla JS + CSS, žiadne CDN, funguje offline
-  (dizajnová rodina podľa interného webu *Peppol features*)
-* `data/jobs.db` — front + história; `data/{tts,stt,converted,jobs}/` — súbory
-* `logs/jobs.log` — journal `start/finish` (dôkaz sekvenčnosti, pozri nižšie)
+## Prerequisites
 
-Web **nepreberá** normalizáciu, chunking, retry, conditioning ani lifecycle —
-to všetko vlastní a riadi manager.
+- Python 3.10+
+- RTX 3050 (or compatible GPU)
+- AI GPU Manager running on `:18080`
+- CUDA 12.x
 
-## Install
+## Installation
 
 ```bash
-cd /home/rugent/rudo-tts-stt-web
+git clone https://github.com/Rugents-masterpiece/rudo-tts-stt-web.git
+cd rudo-tts-stt-web
+
+# Create venv
 python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
-cp .env.example .env   # voliteľné, defaulty sú v kóde
-```
+source .venv/bin/activate
+pip install -r requirements.txt
 
-Vyžaduje: `ffmpeg` v PATH (over `ffmpeg -version`).
+# Configure (copy example)
+cp .env.example .env
+# Edit .env with your settings
 
-## Run (manuálne)
+# Run
+uvicorn app:app --host 0.0.0.0 --port 10075
 
-```bash
-.venv/bin/uvicorn app:app --host 0.0.0.0 --port 10075
-```
-
-Open: `http://<server-ip>:10075/` (LAN). `AUTH_ENABLED=false` — len dôveryhodná sieť.
-
-## Run (systemd)
-
-```bash
+# Or with systemd
 sudo cp systemd/rudo-tts-stt-web.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable --now rudo-tts-stt-web.service
-systemctl status rudo-tts-stt-web.service
+sudo systemctl enable --now rudo-tts-stt-web
 ```
 
-Beží ako `rugent`, `Restart=on-failure`, port 10075. Nezakročí do AI infraštruktúry.
+## Configuration (`.env`)
 
-## API
+```env
+AI_GPU_MANAGER_URL=http://127.0.0.1:18080
+TTS_MODEL=chatterbox
+STT_MODEL=whisperx
+VOICE_SELECTOR_UI=true
+```
 
-| Route | Účel |
-|---|---|
-| `GET /health` | zdravie webu + queue depth + stav managera |
-| `GET /api/status` | aktuálny job, čakajúci, manager profil/workers |
-| `POST /api/tts` | `{text, normalize, voice?, seed?}` → enqueue TTS job |
-| `POST /api/wake` | zavolá minimálny TTS na manager, čím zobudí GPU worker z idle (switch profilu na TTS) |
-| `POST /api/stt` | multipart `files=...` (N súborov → N jobov) |
-| `GET /api/jobs?limit=N` | história (default 20) |
-| `GET /api/job/{id}` | detail jobu (transcript/result_path) |
-| `GET /api/job/{id}/download` | WAV / konvertovaný súbor |
-| `POST /api/job/{id}/cancel` | len queued |
-| `POST /api/jobs/{id}/convert` | WAV→MP3/AAC (`format`,`bitrate`,`volume?`) |
-| `GET /api/transcript/{id}.txt` | TXT prepisu (UTF-8) |
-| `GET /api/transcripts.txt` | spojené všetky prepisy |
-| `GET /api/audio/{id}` | audio priamo do playera |
+## API Endpoints
 
-TTS request na manageri: `POST /v1/audio/speech {input, normalize, voice, seed?}`.
-`voice` je iba `rudo` alebo `melisko`; vynechaná hodnota znamená `rudo`,
-neplatná hodnota vráti HTTP 422 bez vloženia úlohy. Hlas aj seed sa uložia
-pri odoslaní; neskoršia zmena výberu nemení už zaradené úlohy. Prázdny / null
-seed neposielame manageru: použije predvolený seed hlasu (**Rudo 42**, **Melisko 0**).
-Explicitný seed (vrátane 0) sa odošle bez straty. Ostatné parametre vlastní manager;
-UI nemá falošné sliders. Detail, história aj aktuálna/čakajúca fronta vracajú
-`voice`; staré TTS záznamy bez tohto poľa znamenajú Rudo. WAV názov obsahuje hlas.
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/health` | GET | Health check |
+| `/voices` | GET | List available TTS voices |
+| `/tts` | POST | Text-to-Speech synthesis |
+| `/stt` | POST | Speech-to-Text transcription |
+| `/stt/stream` | WS | Real-time STT streaming |
 
-### Offline regresné testy
+## Voice Selection UI
+
+Access at `http://<host>:10075/` — visual voice picker with:
+- Voice cards with play preview
+- Fico voice (ref sha 010a6b21, denoised, seed 0)
+- Voice cloning from uploaded reference audio
+
+## Development
 
 ```bash
-.venv/bin/python -m unittest discover -s tests -p 'test_*.py' -v
-node --check static/app.js
-node tests/voice_ui.test.cjs
+# Run tests
+pytest tests/
+
+# Lint
+ruff check .
+black --check .
 ```
 
-Testy používajú dočasný `APP_HOME`, kópiu statických súborov a mocked HTTP
-managera; nespúšťajú lifespan worker, nemenia živú DB a nesyntetizujú na GPU.
-Pôvodný `tests/concurrency_proof.py` je živý integračný test, nie offline suite.
-Zmeny HTML/backendu sa aktivujú až po **schválenom reštarte** webu; statické
-JS/CSS sa servujú okamžite. JS preto toleruje staré HTML bez výberu hlasu
-(fallback Rudo). Táto implementácia sama žiadnu službu nereštartuje.
+## Systemd Service
 
-STT request: `POST /v1/audio/transcriptions` (multipart file).
-Endpoint nepodporuje t timestampy ani ďalšie kvalitatívne parametre — UI preto
-žiadne falošné sliders neobsahuje (advanced panel STT: žiadne dostupné).
+```ini
+# /etc/systemd/system/rudo-tts-stt-web.service
+[Unit]
+Description=Rudo krici TTS/STT web (frontend over RTX3050 AI GPU Manager)
+After=network-online.target ai-gpu-manager.service
+Wants=ai-gpu-manager.service
 
-## Fronta (concurrency=1)
+[Service]
+Type=simple
+User=rugent
+WorkingDirectory=/home/rugent/rudo-tts-stt-web
+EnvironmentFile=/home/rugent/rudo-tts-stt-web/.env
+ExecStart=/home/rugent/rudo-tts-stt-web/.venv/bin/uvicorn app:app --host 0.0.0.0 --port 10075
+Restart=on-failure
+RestartSec=5
 
-* jeden asyncio worker, FIFO, `asyncio.Semaphore(1)`
-* joby: `queued → processing → completed|failed|cancelled`
-* dôkaz zo journalu (`logs/jobs.log`, řadky `start id=…/finish id=…`):
-  medzi dvoma `start` je vždy `finish` — `MAX_SIMULTANEOUS_AI_JOBS = 1`
-* test: `tests/concurrency_proof.py` (4 klienti, TTS aj STT súčasne)
-* počas restartu service: nedokončené joby označia `failed: interrupted by restart`
-  (bez trvalého persistence fronty naprieč rebootmi — v1)
+[Install]
+WantedBy=multi-user.target
+```
 
-## Uploady / downloads
+## Security
 
-* povolené prípony STT vstupu: wav, mp3, aac, m4a, flac, ogg, opus, webm, mp4, wma
-  (ne-WAV vstup sa pred STT prevádza na 16 kHz mono WAV cez ffmpeg)
-* limit `MAX_UPLOAD_MB=500`, filename sa sanitizuje a **nikdy nie je filesystem cesta**
-* originál z managera = canonical **WAV** (24 kHz mono) — konverzie
-  (MP3 128/192/256/320k, AAC 128/192/256k, prípadná loudness norma)
-  sa tvoria do `data/converted/`, originál zostáva nezmenený
+- No credentials in repository
+- `.env` is gitignored (copy from `.env.example`)
+- AI GPU Manager handles model authentication
+- Runs on localhost by default
 
-## Retention
+## License
 
-* hodiny: `FILE_RETENTION_HOURS=24` (default); raz za hodinu smaže hotové
-  audio + staré uploady a job-row starsie 7 dní. Aktívny job sa nemaže.
-
-## Troubleshooting
-
-* `connection refused :10075` → `systemctl status rudo-tts-stt-web`, prípadne `.env` port
-* `manager unavailable` v UI → manager nie je `active`, over `ai-mode status` a `systemctl status ai-gpu-manager.service`
-* job stuck `processing` → pozri `logs/jobs.log` + `journalctl -u rudo-tts-stt-web`; worker nesedia, chyba jobu nedrví frontu
-* chýbajúce MP3/AAC → over `ffmpeg -version`; konverzia je also job (cez queue UI, ale FFmpeg nejde na GPU)
-* UI netuistne → stačí refresh; frontový stav je serverový (`/api/status`)
-* **NEMAŽ `logs/jobs.log` počas behu serveru** (drží odvorené fd); ak treba čistý list, reštartuj service.
+MIT
