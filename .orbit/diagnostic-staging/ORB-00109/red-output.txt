@@ -1,0 +1,46 @@
+test_actual_adapter_synth_drops_error_details_from_health (__main__.DefectTests.test_actual_adapter_synth_drops_error_details_from_health) ... ok
+test_actual_worker_deactivate_failure_sets_error (__main__.DefectTests.test_actual_worker_deactivate_failure_sets_error) ... ok
+test_actual_worker_main_cuda_runtime_error_preserves_ready_and_continues (__main__.DefectTests.test_actual_worker_main_cuda_runtime_error_preserves_ready_and_continues) ... FAIL
+test_alive_error_blocks_retrieval_and_endpoint_returns_503 (__main__.DefectTests.test_alive_error_blocks_retrieval_and_endpoint_returns_503) ... FAIL
+test_dead_worker_control_does_restart (__main__.DefectTests.test_dead_worker_control_does_restart) ... ok
+test_idle_error_is_not_recovered (__main__.DefectTests.test_idle_error_is_not_recovered) ... ok
+test_idle_offload_overlaps_request_and_clears_new_owner (__main__.DefectTests.test_idle_offload_overlaps_request_and_clears_new_owner) ... FAIL
+test_idle_restarts_dead_worker_even_with_active_job (__main__.DefectTests.test_idle_restarts_dead_worker_even_with_active_job) ... ok
+test_idle_unhandled_health_error_terminates_loop (__main__.DefectTests.test_idle_unhandled_health_error_terminates_loop) ... ok
+test_same_profile_error_skips_activation (__main__.DefectTests.test_same_profile_error_skips_activation) ... ok
+
+======================================================================
+FAIL: test_actual_worker_main_cuda_runtime_error_preserves_ready_and_continues (__main__.DefectTests.test_actual_worker_main_cuda_runtime_error_preserves_ready_and_continues)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/rugent/tts-cuda-investigation-20261009/lifecycle/test_lifecycle.py", line 245, in test_actual_worker_main_cuda_runtime_error_preserves_ready_and_continues
+    self.assertEqual(sent[1].get('fatal_error'), True, 'fatal CUDA errors must be explicitly classified')
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != True : fatal CUDA errors must be explicitly classified
+
+======================================================================
+FAIL: test_alive_error_blocks_retrieval_and_endpoint_returns_503 (__main__.DefectTests.test_alive_error_blocks_retrieval_and_endpoint_returns_503)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/rugent/tts-cuda-investigation-20261009/lifecycle/test_lifecycle.py", line 141, in test_alive_error_blocks_retrieval_and_endpoint_returns_503
+    self.assertGreater(t.restarts, 0, 'fatal alive worker must be retired/replaced')
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 not greater than 0 : fatal alive worker must be retired/replaced
+
+======================================================================
+FAIL: test_idle_offload_overlaps_request_and_clears_new_owner (__main__.DefectTests.test_idle_offload_overlaps_request_and_clears_new_owner)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/rugent/tts-cuda-investigation-20261009/lifecycle/test_lifecycle.py", line 191, in test_idle_offload_overlaps_request_and_clears_new_owner
+    self.assertEqual(observed[0]['state_at_request'], 'gpu_ready', 'request must not overlap idle offload')
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'offloading' != 'gpu_ready'
+- offloading
++ gpu_ready
+ : request must not overlap idle offload
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.012s
+
+FAILED (failures=3)
+EVIDENCE /home/rugent/tts-cuda-investigation-20261009/lifecycle/red-evidence.json

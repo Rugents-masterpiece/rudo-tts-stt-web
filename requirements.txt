@@ -1,0 +1,6 @@
+# rudo-tts-stt-web — Python dependencies (derived from the working .venv)
+# Direct deps; full transitive pin set is in requirements-full.lock.txt.
+fastapi==0.141.1
+uvicorn[standard]==0.54.0
+python-multipart==0.0.32
+httpx==0.28.1

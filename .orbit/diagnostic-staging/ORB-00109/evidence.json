@@ -1,0 +1,146 @@
+{
+  "mode": "defect-characterization",
+  "tests_run": 10,
+  "failures": 0,
+  "errors": 0,
+  "source_hashes_before": {
+    "manager_app.py": "5a894e273df23bd89fc94fa6f3633fca8e5f36dc662065396ea5839f0ccbc0f5",
+    "adapters.py": "d416a0fb6771088eff0a0024851461e18bd467dda1852be172c83a88cdccbf29",
+    "chatterbox_worker.py": "181a0cc78a5b7bfd07dc79770fd1e94f7d1eba89b55aa0142850e7fd89035af7"
+  },
+  "source_hashes_after": {
+    "manager_app.py": "5a894e273df23bd89fc94fa6f3633fca8e5f36dc662065396ea5839f0ccbc0f5",
+    "adapters.py": "d416a0fb6771088eff0a0024851461e18bd467dda1852be172c83a88cdccbf29",
+    "chatterbox_worker.py": "181a0cc78a5b7bfd07dc79770fd1e94f7d1eba89b55aa0142850e7fd89035af7"
+  },
+  "production_unchanged": true,
+  "evidence": [
+    {
+      "case": "actual_worker_main_generic_cuda_error",
+      "responses": [
+        {
+          "ok": true,
+          "event": "cpu_ready",
+          "load": {},
+          "state": "gpu_ready"
+        },
+        {
+          "ok": false,
+          "error": "RuntimeError('CUDA error: device-side assert triggered')",
+          "state": "gpu_ready"
+        },
+        {
+          "ok": true,
+          "state": "gpu_ready"
+        }
+      ],
+      "method": "AST-extracted original main, mock Worker/torch/protocol only"
+    },
+    {
+      "case": "alive_error_blocks_retrieval",
+      "snapshot": {
+        "status": "degraded",
+        "active_profile": "tts",
+        "transition": "deactivating",
+        "queue_depth": 0,
+        "state": "error",
+        "accepting": true,
+        "workers": {
+          "tts": {
+            "ok": false,
+            "state": "error",
+            "error": "CUDA error: device-side assert triggered",
+            "alive": true,
+            "engine": "chatterbox-slovak",
+            "python": "MOCK"
+          },
+          "retrieval": {
+            "state": "cpu_ready",
+            "alive": true
+          },
+          "stt": {
+            "state": "cpu_ready",
+            "alive": true
+          }
+        },
+        "switch_count": 0
+      },
+      "tts_rpc_ops": [
+        "synth",
+        "deactivate",
+        "deactivate",
+        "deactivate"
+      ],
+      "retrieval_body_executed": false,
+      "endpoint_status": 503
+    },
+    {
+      "case": "idle_error_not_recovered",
+      "snapshot": {
+        "status": "degraded",
+        "active_profile": "tts",
+        "transition": "error",
+        "queue_depth": 0,
+        "state": "error",
+        "accepting": true,
+        "workers": {
+          "tts": {
+            "ok": false,
+            "state": "error",
+            "error": "CUDA error: device-side assert triggered",
+            "alive": true,
+            "engine": "chatterbox-slovak",
+            "python": "MOCK"
+          },
+          "retrieval": {
+            "state": "cpu_ready",
+            "alive": true
+          },
+          "stt": {
+            "state": "cpu_ready",
+            "alive": true
+          }
+        },
+        "switch_count": 0
+      }
+    },
+    {
+      "case": "idle_request_race",
+      "request_observation": [
+        {
+          "state_at_request": "offloading",
+          "active_job": "f8218e4917f6"
+        }
+      ],
+      "snapshot": {
+        "status": "degraded",
+        "active_profile": null,
+        "transition": null,
+        "queue_depth": 0,
+        "state": "idle",
+        "accepting": true,
+        "workers": {
+          "tts": {
+            "state": "cpu_ready",
+            "alive": true
+          },
+          "retrieval": {
+            "state": "cpu_ready",
+            "alive": true
+          },
+          "stt": {
+            "state": "cpu_ready",
+            "alive": true
+          }
+        },
+        "switch_count": 0
+      },
+      "activation_calls": 0
+    },
+    {
+      "case": "idle_restart_during_active_job",
+      "restart_calls": 1,
+      "job_still_active": true
+    }
+  ]
+}

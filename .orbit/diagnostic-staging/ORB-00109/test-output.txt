@@ -1,0 +1,16 @@
+test_actual_adapter_synth_drops_error_details_from_health (__main__.DefectTests.test_actual_adapter_synth_drops_error_details_from_health) ... ok
+test_actual_worker_deactivate_failure_sets_error (__main__.DefectTests.test_actual_worker_deactivate_failure_sets_error) ... ok
+test_actual_worker_main_cuda_runtime_error_preserves_ready_and_continues (__main__.DefectTests.test_actual_worker_main_cuda_runtime_error_preserves_ready_and_continues) ... ok
+test_alive_error_blocks_retrieval_and_endpoint_returns_503 (__main__.DefectTests.test_alive_error_blocks_retrieval_and_endpoint_returns_503) ... ok
+test_dead_worker_control_does_restart (__main__.DefectTests.test_dead_worker_control_does_restart) ... ok
+test_idle_error_is_not_recovered (__main__.DefectTests.test_idle_error_is_not_recovered) ... ok
+test_idle_offload_overlaps_request_and_clears_new_owner (__main__.DefectTests.test_idle_offload_overlaps_request_and_clears_new_owner) ... ok
+test_idle_restarts_dead_worker_even_with_active_job (__main__.DefectTests.test_idle_restarts_dead_worker_even_with_active_job) ... ok
+test_idle_unhandled_health_error_terminates_loop (__main__.DefectTests.test_idle_unhandled_health_error_terminates_loop) ... ok
+test_same_profile_error_skips_activation (__main__.DefectTests.test_same_profile_error_skips_activation) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.009s
+
+OK
+EVIDENCE /home/rugent/tts-cuda-investigation-20261009/lifecycle/evidence.json

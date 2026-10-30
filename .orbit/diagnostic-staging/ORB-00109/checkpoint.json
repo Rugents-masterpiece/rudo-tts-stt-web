@@ -1,0 +1,15 @@
+{
+  "task": "ORB-00109",
+  "verified_characterization_tests": 10,
+  "expected_red_failures": 3,
+  "production_unchanged": true,
+  "sha256": {
+    "test_lifecycle.py": "fea3a4b8f702f277539aaaa4f0cbe57ff392b25ff1a2984f48f3437c56682ef5",
+    "test-output.txt": "36226b97be4bdf07d3dbcad5b2e214522ac2f9ef67a7e7b8c053a3eb602a85f8",
+    "red-output.txt": "59da5b17c19cdf4ef186381a05812bb340a21c9b3ba7e412837b47fce7ee4ae2",
+    "evidence.json": "eef8f8c52844ed1b5abcbaf55707ba9ee323520b5acd79713f339dc992b12540",
+    "red-evidence.json": "58e5a140748856cb1f14724958b25c8549ec6c39b98ba431c66c20da44283ab4",
+    "report.md": "91f745006f6b43acd640dace15880018d8d2a5c077c821b2cb81d2822d5cf482",
+    "proposed-minimum-patch.md": "0cb307b7d1a7efdbee268b18f1288290f684e934d88e79406dd63a9e6cb96b98"
+  }
+}

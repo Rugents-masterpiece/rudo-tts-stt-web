@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.coverage
+*.log
+logs/
+*.db
+*.sqlite
+.env
+.env.*
+*.lock
+.DS_Store
+data/
+*.bak-*

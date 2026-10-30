@@ -1,0 +1,25 @@
+[Unit]
+Description=Rudo krici TTS/STT web (frontend over RTX3050 AI GPU Manager)
+Documentation=file:///home/rugent/rudo-tts-stt-web/README.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=rugent
+Group=rugent
+WorkingDirectory=/home/rugent/rudo-tts-stt-web
+ExecStart=/home/rugent/rudo-tts-stt-web/.venv/bin/uvicorn app:app --host 0.0.0.0 --port 10075
+Restart=on-failure
+RestartSec=5
+StartLimitIntervalSec=60
+StartLimitBurst=5
+Environment=PYTHONUNBUFFERED=1
+
+# Hardening that does not break ffmpeg/uploads/storage:
+NoNewPrivileges=true
+# PrivateTmp=true  -- intentionally off: conversion temp files live under data/,
+# but we keep tmp isolated semantics unneeded here; enable only if path audit passes.
+
+[Install]
+WantedBy=multi-user.target

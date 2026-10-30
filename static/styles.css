@@ -1,0 +1,101 @@
+/* Rudo kričí — dizajn podľa rodiny interného webu Peppol features (.42:10001) */
+:root{
+  --ink:#18343a; --muted:#6c7f82; --line:#dce8e6; --paper:#ffffff; --bg:#f3f7f5;
+  --accent:#1d84c9; --accent-strong:#1771ad; --mint:#e7f3ee; --danger:#c0392b;
+  --shadow:0 18px 50px rgba(24,52,58,.08);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+
+.topbar{height:70px;padding:0 max(24px,calc((100vw - 1240px)/2));display:flex;align-items:center;justify-content:space-between;
+  background:var(--paper);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:16px;letter-spacing:-.02em;text-decoration:none;color:var(--ink)}
+.brand-mark{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:9px;background:var(--accent);color:#fff;font-weight:800}
+.mgr{display:flex;align-items:center;gap:14px;font-size:13px;color:var(--muted)}
+.mgr b{color:var(--ink)}
+
+.shell{max-width:1240px;margin:auto;padding:28px 24px 60px}
+
+.queue-card,.card{background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:24px 28px;
+  margin:0 0 20px 0;box-shadow:var(--shadow)}
+.queue-card{background:linear-gradient(180deg,#eaf5f1,var(--paper))}
+.queue-card h2,.card h2{margin:0 0 14px 0;font-size:22px;font-weight:700;letter-spacing:-.02em}
+.card h2 .sub{font-size:13px;font-weight:500;color:var(--muted);background:var(--mint);padding:3px 10px;border-radius:999px;margin-left:10px;vertical-align:2px}
+
+.qgrid{display:grid;grid-template-columns:1fr 1.4fr;gap:18px}
+.qgrid strong{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:6px}
+.qitem{display:block;padding:7px 0;border-top:1px dashed var(--line);font-size:13px}
+.pill{font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--mint);color:#0f5140;vertical-align:2px}
+.pill.busy{background:#fff3d6;color:#7a5b00}
+.pill.down{background:#fde2df;color:var(--danger)}
+
+textarea{width:100%;resize:vertical;border:1px solid var(--line);border-radius:11px;padding:13px;font:inherit;
+  background:#fbfdfc;color:var(--ink)}
+textarea:focus,input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--line)}
+textarea[readonly]{background:#f6faf9;color:var(--ink)}
+
+.switch{display:inline-flex;align-items:center;gap:10px;margin:16px 0 0 0;font-size:14px;font-weight:500}
+.voice-field{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:0 0 16px}
+.voice-field label{font-weight:600}
+.voice-field select{border:1px solid var(--line);border-radius:7px;padding:7px 12px;font:inherit;color:var(--ink);background:var(--paper)}
+.voice-field .advNote{flex-basis:100%;margin:0}
+
+details.adv{border:1px dashed #bfd4ce;background:#f7faf9;border-radius:13px;padding:14px 18px;margin:18px 0}
+details.adv summary{cursor:pointer;font-weight:700;color:var(--accent-strong)}
+.advGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 22px;margin:16px 0 12px}
+.advGrid label{display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:var(--muted)}
+.advGrid input[type=number]{max-width:88px;border:1px solid var(--line);border-radius:7px;padding:4px 6px;font:inherit;color:var(--ink)}
+.advNote{font-size:12.5px;color:var(--muted);margin:10px 0}
+
+button{border:0;cursor:pointer;font:inherit;border-radius:9px}
+.primary-button{display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:#fff;font-weight:700;padding:12px 18px;margin:16px 0 6px}
+.primary-button:hover{background:var(--accent-strong)}
+.primary-button:disabled{background:#9fc3da;cursor:not-allowed}
+.outline-button{background:#fff;color:var(--ink);border:1px solid var(--line);font-weight:700;padding:11px 17px}
+.outline-button:hover{border-color:var(--accent);color:var(--accent)}
+
+.statusline{font-size:13.5px;margin:10px 0;color:var(--muted);min-height:20px}
+.statusline b{color:var(--ink)}
+
+audio{width:100%;margin:12px 0}
+
+.dlbox{display:flex;flex-wrap:wrap;align-items:center;gap:18px;background:#f7faf9;border:1px solid var(--line);border-radius:11px;padding:14px 16px;margin-top:14px}
+.dlbox label{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.dlbox select{border:1px solid var(--line);border-radius:7px;padding:5px 8px;font:inherit;color:var(--ink);background:#fff}
+
+.drop{border:2px dashed #9fc3da;border-radius:13px;padding:36px;text-align:center;color:var(--muted);
+  background:#fbfdfc;transition:border-color .15s, background .15s}
+.drop.hover{border-color:var(--accent);background:#eaf5f1;cursor:pointer}
+
+.sttlist{margin:10px 0}
+.sttrow{display:flex;justify-content:space-between;border-top:1px dashed var(--line);padding:8px 0;font-size:13px}
+.sttrow .name{font-weight:500}
+
+.transcript{margin:20px 0}
+.transcript textarea{height:170px;font-size:14px}
+.transcript .meta{font-size:12px;color:var(--muted);margin:6px 0}
+
+.hidden{display:none}
+
+table.hist{width:100%;border-collapse:collapse;font-size:13px}
+table.hist th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line)}
+table.hist td{padding:9px 10px;border-bottom:1px solid #edf4f2}
+table.hist tr:hover{background:#f6faf9}
+
+.ok{color:#0f5140;font-weight:700}
+.bad{color:var(--danger);font-weight:700}
+.wait{color:#7a5b00;font-weight:700}
+
+@media (max-width:760px){
+  .shell{padding:20px 14px 46px}
+  .qgrid{grid-template-columns:1fr}
+  .queue-card,.card{padding:18px}
+  .topbar{padding:0 14px}
+}
+
+/* AI wake button */
+.ai-cluster{display:flex;align-items:center;gap:14px}
+.btn-wake{background:#fff;border:1px solid #d8e2df;color:#18343a;border-radius:999px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s ease}
+.btn-wake:hover:not(:disabled){background:#eef4f2;border-color:#9fb3af}
+.btn-wake:disabled{opacity:.55;cursor:wait}
+.mgr{font-size:12.5px;color:#33575f}

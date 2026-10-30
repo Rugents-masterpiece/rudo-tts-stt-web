@@ -1,0 +1,8 @@
+build: "make/fmt/lint friction"
+docs: "Stale or missing CLAUDE.md or design docs"
+lifecycle: "Task lifecycle confusion or transition issues"
+naming: "Naming drift or duplicated sources of truth"
+other: "Fallback"
+policy: "fsProfile or sandboxing surprises"
+skill-guidance: "Misleading or incorrect skill instructions"
+tooling: "Tool, CLI, or MCP failures"

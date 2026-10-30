@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 2,
+  "assetKind": "routine",
+  "assets": {
+    "auto_task_scheduler": "306d87b2c8d16ab6026a2b31dddf6cbc9d5d4e5111c72e1c9f6e963fdb7427ac",
+    "ci_failure_sweep": "e028190396cab985a57eef081d658c7c3dd467fe0bca6a069c68985cfa3a441b",
+    "dependabot_alert_sweep": "8a3e88ba66ff2cbdbfdd8a340c3e0d9ff2ffe79419d1bcaac4c7c732247ea09f",
+    "ship_sweep": "4e6d393172b6e72542f2d4861bcb3a1e56e1d3443a9160fcb15f7c00cc9fb7ec",
+    "task_pilot": "1298a8d85275f423ea6420c749034f3ea7a3a1c291353d8fb04cab66217ef561",
+    "task_triage": "bb2508648a67c07e97a0b21e9b1c796d461cbc0336041f1fe9c903cdcb0d2d4d",
+    "worktree_gc": "9637416518b706f467ec2b046e5612778e5790f48f2e0150431dfe7c2da58c49"
+  },
+  "routineProvenance": {
+    "auto_task_scheduler": {
+      "templateDigest": "7f3b1a41dfe43b5445b47450f21d8e424fcdeeaa977a6f09d4ded03fc7ed16be",
+      "renderedDigest": "306d87b2c8d16ab6026a2b31dddf6cbc9d5d4e5111c72e1c9f6e963fdb7427ac",
+      "binding": {
+        "name": "auto-task-scheduler-rudo-tts-stt-web",
+        "hosts": [
+          "pc-agent"
+        ]
+      }
+    },
+    "ci_failure_sweep": {
+      "templateDigest": "a1b01d81293cbddb16f636aaf1d097a1ef7c1a90f88046a0b9223bc1a6158825",
+      "renderedDigest": "e028190396cab985a57eef081d658c7c3dd467fe0bca6a069c68985cfa3a441b",
+      "binding": {
+        "name": "ci-failure-sweep-rudo-tts-stt-web",
+        "hosts": [
+          "pc-agent"
+        ]
+      }
+    },
+    "dependabot_alert_sweep": {
+      "templateDigest": "e66de2d11cf610f8bb9100845aafe8a85a33bc5678a10e30bd062d6894ad0d0f",
+      "renderedDigest": "8a3e88ba66ff2cbdbfdd8a340c3e0d9ff2ffe79419d1bcaac4c7c732247ea09f",
+      "binding": {
+        "name": "dependabot-alert-sweep-rudo-tts-stt-web",
+        "hosts": [
+          "pc-agent"
+        ]
+      }
+    },
+    "ship_sweep": {
+      "templateDigest": "416134b342e33f1b2565b88bc2e41b885a39b21c02324f0c8ed79bec74c562d1",
+      "renderedDigest": "4e6d393172b6e72542f2d4861bcb3a1e56e1d3443a9160fcb15f7c00cc9fb7ec",
+      "binding": {
+        "name": "ship-sweep-rudo-tts-stt-web",
+        "hosts": [
+          "pc-agent"
+        ]
+      }
+    },
+    "task_pilot": {
+      "templateDigest": "f8b9699a0dc505ea5cbe44998b88995b8720d6e0bdde3fa6ab3f40bec863f280",
+      "renderedDigest": "1298a8d85275f423ea6420c749034f3ea7a3a1c291353d8fb04cab66217ef561",
+      "binding": {
+        "name": "task-pilot-rudo-tts-stt-web",
+        "hosts": [
+          "pc-agent"
+        ]
+      }
+    },
+    "task_triage": {
+      "templateDigest": "21feb397078d47165a0e2a618e8f0dfc97cdbd02c60d0595d71b43b20abd7c5e",
+      "renderedDigest": "bb2508648a67c07e97a0b21e9b1c796d461cbc0336041f1fe9c903cdcb0d2d4d",
+      "binding": {
+        "name": "task-triage-rudo-tts-stt-web",
+        "hosts": [
+          "pc-agent"
+        ]
+      }
+    },
+    "worktree_gc": {
+      "templateDigest": "b03d4f900f0746dd317d82fc11b6cd81a398edee18519e3f650d37ed9195a70d",
+      "renderedDigest": "9637416518b706f467ec2b046e5612778e5790f48f2e0150431dfe7c2da58c49",
+      "binding": {
+        "name": "worktree-gc-rudo-tts-stt-web",
+        "hosts": [
+          "pc-agent"
+        ]
+      }
+    }
+  }
+}
